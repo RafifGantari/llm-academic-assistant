@@ -1,8 +1,5 @@
-from dotenv import load_dotenv
-import os
 from langchain_groq import ChatGroq
-
-load_dotenv()
+import os
 
 def get_llm():
     return ChatGroq(
