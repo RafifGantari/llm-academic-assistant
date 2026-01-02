@@ -1,15 +1,17 @@
 import streamlit as st
-from src.loader import load_and_split
-from src.vectorstore import create_vectorstore, save_vectorstore
+import os
 
-uploaded_file = st.file_uploader("Upload PDF", type="pdf")
+UPLOAD_DIR = "data/documents"
+
+# ⬇️ PENTING: pastikan folder ada
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+uploaded_file = st.file_uploader("Upload PDF", type=["pdf"])
 
 if uploaded_file:
-    with open(f"data/documents/{uploaded_file.name}", "wb") as f:
+    file_path = os.path.join(UPLOAD_DIR, uploaded_file.name)
+
+    with open(file_path, "wb") as f:
         f.write(uploaded_file.getbuffer())
 
-    docs = load_and_split(f"data/documents/{uploaded_file.name}")
-    vs = create_vectorstore(docs)
-    save_vectorstore(vs)
-
-    st.success("Dokumen berhasil diproses!")
+    st.success(f"File {uploaded_file.name} berhasil diupload")
