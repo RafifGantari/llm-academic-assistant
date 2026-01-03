@@ -1,26 +1,25 @@
-import os
 from langchain_community.vectorstores import FAISS
 from src.embeddings import get_embeddings
+import os
 
-VECTORSTORE_PATH = "artifacts/vectorstore"
+VECTORSTORE_DIR = "artifacts/vectorstore"
 
 def create_vectorstore(docs):
     embeddings = get_embeddings()
-    return FAISS.from_documents(docs, embeddings)
+    vs = FAISS.from_documents(docs, embeddings)
 
-def save_vectorstore(vs, path=VECTORSTORE_PATH):
-    os.makedirs(path, exist_ok=True)
-    vs.save_local(path)
+    os.makedirs(VECTORSTORE_DIR, exist_ok=True)
+    vs.save_local(VECTORSTORE_DIR)
 
-def load_vectorstore(path=VECTORSTORE_PATH):
-    embeddings = get_embeddings()
+    return vs
 
-    index_file = os.path.join(path, "index.faiss")
-    if not os.path.exists(index_file):
+def load_vectorstore():
+    if not os.path.exists(VECTORSTORE_DIR):
         raise FileNotFoundError("Vectorstore belum dibuat")
 
+    embeddings = get_embeddings()
     return FAISS.load_local(
-        path,
+        VECTORSTORE_DIR,
         embeddings,
         allow_dangerous_deserialization=True
     )

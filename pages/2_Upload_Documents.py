@@ -1,17 +1,18 @@
+from src.loader import load_documents
+from src.vectorstore import create_vectorstore
 import streamlit as st
-import os
 
-UPLOAD_DIR = "data/documents"
+st.title("Upload Dokumen")
 
-# ⬇️ PENTING: pastikan folder ada
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+uploaded_files = st.file_uploader(
+    "Upload PDF / TXT",
+    type=["pdf", "txt"],
+    accept_multiple_files=True
+)
 
-uploaded_file = st.file_uploader("Upload PDF", type=["pdf"])
+if st.button("Proses Dokumen") and uploaded_files:
+    with st.spinner("Memproses dokumen..."):
+        docs = load_documents(uploaded_files)
+        create_vectorstore(docs)   # ⬅️ simpan ke disk
 
-if uploaded_file:
-    file_path = os.path.join(UPLOAD_DIR, uploaded_file.name)
-
-    with open(file_path, "wb") as f:
-        f.write(uploaded_file.getbuffer())
-
-    st.success(f"File {uploaded_file.name} berhasil diupload")
+        st.success("Dokumen berhasil diproses! Silakan buka halaman Chat.")
