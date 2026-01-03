@@ -1,7 +1,9 @@
 streamlit
 langchain
-langchain-core
 langchain-community
+langchain-core
 langchain-groq
+sentence-transformers
 faiss-cpu
+pypdf
 python-dotenv
